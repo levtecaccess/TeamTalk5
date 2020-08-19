@@ -990,6 +990,8 @@ void ClientNode::OpenAudioCapture(const AudioCodec& codec)
     if(codec_samples <= 0 || codec_samplerate <= 0 || codec_channels == 0 ||
        m_soundprop.inputdeviceid == SOUNDDEVICE_IGNORE_ID)
         return;
+    
+    m_soundprop.samples_delay_msec = GETTIMESTAMP();
 
     bool opened;
     if (m_flags & CLIENT_SNDINOUTPUT_DUPLEX)
@@ -1148,6 +1150,10 @@ void ClientNode::QueueAudioCapture(media::AudioFrame& audframe)
     audframe.voiceact_enc = (m_flags & CLIENT_SNDINPUT_VOICEACTIVATED);
     audframe.sample_no = m_soundprop.samples_recorded;
     m_soundprop.samples_recorded += audframe.input_samples;
+
+    MYTRACE_COND(m_soundprop.samples_delay_msec, ACE_TEXT("%p Audio recorder delay: %u msec\n"),
+                 this, GETTIMESTAMP() - m_soundprop.samples_delay_msec);
+    m_soundprop.samples_delay_msec = 0;
 
     MYTRACE(ACE_TEXT("%p Samples recorded: %u. PTT close %d\n"), this, m_soundprop.samples_recorded, int(ptt_close));
 

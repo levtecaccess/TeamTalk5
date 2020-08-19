@@ -221,7 +221,7 @@ namespace teamtalk {
         ACE_UINT32 samples_transmitted;
         //total samples recorded
         ACE_UINT32 samples_recorded;
-
+        uint32_t samples_delay_msec;
         SoundDeviceEffects effects;
 
         SoundProperties()
@@ -231,6 +231,7 @@ namespace teamtalk {
             dereverb = true;
             samples_transmitted = 0;
             samples_recorded = 0;
+            samples_delay_msec = 0;
             // default to TT Audio preprocessor to be compatible with
             // SetVoiceGainLevel()
             preprocessor.preprocessor = AUDIOPREPROCESSOR_TEAMTALK;
